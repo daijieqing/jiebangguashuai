@@ -17,7 +17,21 @@ import {
   ArrowRight,
   Layers,
   Workflow,
-  ExternalLink
+  ExternalLink,
+  ShieldCheck,
+  BrainCircuit,
+  Layout,
+  ArrowDown,
+  ArrowUp,
+  FileSearch,
+  RefreshCw,
+  AlertOctagon,
+  Database,
+  Calculator,
+  LineChart,
+  ArrowLeftRight,
+  Lightbulb,
+  Network
 } from 'lucide-react';
 import { RESEARCH_MODULES } from '../../constants';
 
@@ -27,10 +41,236 @@ const IconMap = {
   BarChart: BarChart
 };
 
+// Architecture Data Mapping with Specific Color Themes per Layer
+const ARCHITECTURE_LAYERS: Record<string, {
+  layers: Array<{
+    title: string;
+    subtitle: string;
+    icon: React.ElementType;
+    tags: string[];
+    colorTheme: string; // Using exact tailwind color key
+  }>
+}> = {
+  'module-1': { // 智能辅助评审 (Existing)
+    layers: [
+      {
+        title: "第三层：业务应用层 (交互终端)",
+        subtitle: "人机协作界面，专家反馈闭环",
+        icon: Layout,
+        tags: ["用户交互", "反馈优化"],
+        colorTheme: 'violet'
+      },
+      {
+        title: "第二层：业务防腐层 (智能翻译官)",
+        subtitle: "隔离变化，清洗数据，标准化API契约",
+        icon: ShieldCheck,
+        tags: ["数据处理", "API契约"],
+        colorTheme: 'emerald'
+      },
+      {
+        title: "第一层：智能体层 (智能大脑)",
+        subtitle: "核心认知引擎，负责理解规则与逻辑",
+        icon: BrainCircuit,
+        tags: ["Dify编排", "Milvus知识库", "大模型接口"],
+        colorTheme: 'blue'
+      }
+    ]
+  },
+  'module-2': { // 项目建设偏差分析 (New Rich Colors)
+    layers: [
+      {
+        title: "第三层：业务应用层 (决策业务端)",
+        subtitle: "面向管理者，嵌入流程，发标警报机制",
+        icon: AlertOctagon,
+        tags: ["发标拦截", "审计底稿"],
+        colorTheme: 'rose' // Alert/Danger tone
+      },
+      {
+        title: "第二层：语义对齐与隔离 (标准化中间件)",
+        subtitle: "建立语义映射机制，封装Prompt与SQL逻辑",
+        icon: ArrowLeftRight,
+        tags: ["语义映射", "接口防腐"],
+        colorTheme: 'violet' // Logic/Middleware tone
+      },
+      {
+        title: "第一层：核心稽核引擎 (数字审计员)",
+        subtitle: "智能体工作流编排，RAG跨文档校验",
+        icon: FileSearch,
+        tags: ["指标提取", "一致性校验"],
+        colorTheme: 'indigo' // Deep tech/Engine tone
+      }
+    ]
+  },
+  'module-3': { // 项目绩效评价体系 (New Rich Colors)
+    layers: [
+      {
+        title: "第三层：智能辅助分析与决策层 (价值交付端)",
+        subtitle: "大模型归因分析，识别需求错位风险",
+        icon: Lightbulb,
+        tags: ["归因分析", "绩效诊断"],
+        colorTheme: 'amber' // Value/Insight tone
+      },
+      {
+        title: "第二层：指标计算与模型构建层 (逻辑中枢)",
+        subtitle: "原子数据转复合指标，灵活配置权重",
+        icon: Calculator,
+        tags: ["模型计算", "权重配置"],
+        colorTheme: 'teal' // Calculation/Precision tone
+      },
+      {
+        title: "第一层：指标采集与数据融合层 (感知神经)",
+        subtitle: "配置化连接器，多源数据清洗与对齐",
+        icon: Network,
+        tags: ["数据连接器", "清洗对齐"],
+        colorTheme: 'cyan' // Data/Connectivity tone
+      }
+    ]
+  }
+};
+
 export const AchievementsView: React.FC = () => {
   const [activeTab, setActiveTab] = useState(RESEARCH_MODULES[0].id);
   const activeModule = RESEARCH_MODULES.find(m => m.id === activeTab) || RESEARCH_MODULES[0];
   const ActiveIcon = IconMap[activeModule.iconName];
+
+  // Helper to render architecture layers with dynamic colors
+  const renderArchitecture = (moduleId: string) => {
+    const data = ARCHITECTURE_LAYERS[moduleId];
+    
+    // Default fallback if no custom data exists
+    if (!data) return (
+      <p className="text-sm text-slate-600 leading-relaxed">
+        {activeModule.details.solutionOverview.architecture}
+      </p>
+    );
+
+    return (
+      <div className="mt-4 flex flex-col gap-2">
+        {data.layers.map((layer, index) => {
+          
+          // Dynamic Color Mapping function to avoid complex inline conditionals
+          const getColorClasses = (theme: string) => {
+            switch(theme) {
+              case 'violet': return {
+                bg: "bg-gradient-to-r from-violet-50 to-purple-50",
+                border: "border-violet-200",
+                icon: "bg-violet-500",
+                textTitle: "text-violet-800",
+                textSub: "text-violet-600",
+                tagBg: "bg-white border-violet-100",
+                tagText: "text-violet-600"
+              };
+              case 'emerald': return {
+                bg: "bg-gradient-to-r from-emerald-50 to-teal-50",
+                border: "border-emerald-200",
+                icon: "bg-emerald-500",
+                textTitle: "text-emerald-800",
+                textSub: "text-emerald-600",
+                tagBg: "bg-white border-emerald-100",
+                tagText: "text-emerald-600"
+              };
+              case 'blue': return {
+                bg: "bg-gradient-to-r from-blue-50 to-indigo-50",
+                border: "border-blue-200",
+                icon: "bg-blue-500",
+                textTitle: "text-blue-800",
+                textSub: "text-blue-600",
+                tagBg: "bg-white border-blue-100",
+                tagText: "text-blue-500"
+              };
+              case 'rose': return {
+                bg: "bg-gradient-to-r from-rose-50 to-red-50",
+                border: "border-rose-200",
+                icon: "bg-rose-500",
+                textTitle: "text-rose-800",
+                textSub: "text-rose-600",
+                tagBg: "bg-white border-rose-100",
+                tagText: "text-rose-600"
+              };
+              case 'indigo': return {
+                bg: "bg-gradient-to-r from-indigo-50 to-blue-50",
+                border: "border-indigo-200",
+                icon: "bg-indigo-500",
+                textTitle: "text-indigo-800",
+                textSub: "text-indigo-600",
+                tagBg: "bg-white border-indigo-100",
+                tagText: "text-indigo-600"
+              };
+              case 'amber': return {
+                bg: "bg-gradient-to-r from-amber-50 to-orange-50",
+                border: "border-amber-200",
+                icon: "bg-amber-500",
+                textTitle: "text-amber-800",
+                textSub: "text-amber-600",
+                tagBg: "bg-white border-amber-100",
+                tagText: "text-amber-600"
+              };
+              case 'teal': return {
+                bg: "bg-gradient-to-r from-teal-50 to-emerald-50",
+                border: "border-teal-200",
+                icon: "bg-teal-500",
+                textTitle: "text-teal-800",
+                textSub: "text-teal-600",
+                tagBg: "bg-white border-teal-100",
+                tagText: "text-teal-600"
+              };
+              case 'cyan': return {
+                bg: "bg-gradient-to-r from-cyan-50 to-sky-50",
+                border: "border-cyan-200",
+                icon: "bg-cyan-500",
+                textTitle: "text-cyan-800",
+                textSub: "text-cyan-600",
+                tagBg: "bg-white border-cyan-100",
+                tagText: "text-cyan-600"
+              };
+              default: return { // Fallback to blue
+                bg: "bg-gradient-to-r from-slate-50 to-gray-50",
+                border: "border-slate-200",
+                icon: "bg-slate-500",
+                textTitle: "text-slate-800",
+                textSub: "text-slate-600",
+                tagBg: "bg-white border-slate-100",
+                tagText: "text-slate-500"
+              };
+            }
+          };
+
+          const colors = getColorClasses(layer.colorTheme);
+          const Icon = layer.icon;
+
+          return (
+            <React.Fragment key={index}>
+              <div className={`${colors.bg} border ${colors.border} rounded-lg p-3 shadow-sm relative group hover:shadow-md transition-all`}>
+                <div className="flex items-center gap-3">
+                  <div className={`p-2 ${colors.icon} text-white rounded-lg shadow-sm`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h6 className={`text-xs font-bold ${colors.textTitle}`}>{layer.title}</h6>
+                    <p className={`text-[10px] ${colors.textSub} mt-0.5 leading-tight`}>{layer.subtitle}</p>
+                  </div>
+                </div>
+                <div className="mt-2 flex gap-1.5 flex-wrap">
+                  {layer.tags.map((tag, tIdx) => (
+                    <span key={tIdx} className={`px-1.5 py-0.5 ${colors.tagBg} border ${colors.tagText} text-[10px] rounded font-mono`}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Arrow Up connecting layers (Bottom-to-Top flow) */}
+              {index < data.layers.length - 1 && (
+                <div className="flex justify-center -my-1">
+                  <ArrowUp className="w-4 h-4 text-slate-300 animate-bounce" />
+                </div>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-8">
@@ -152,16 +392,18 @@ export const AchievementsView: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Architecture Column */}
               <div className="bg-white border border-slate-200 rounded-xl p-5 h-full">
                  <h5 className="font-bold text-slate-700 text-sm mb-3 flex items-center">
                     <Settings className="w-4 h-4 mr-2 text-blue-500" /> 
                     2.1 总体架构
                  </h5>
-                 <p className="text-sm text-slate-600 leading-relaxed">
-                    {activeModule.details.solutionOverview.architecture}
-                 </p>
+
+                 {/* Custom Visualization based on Module ID */}
+                 {renderArchitecture(activeModule.id)}
               </div>
 
+              {/* Core Flows Column */}
               <div className="bg-white border border-slate-200 rounded-xl p-5 h-full">
                  <h5 className="font-bold text-slate-700 text-sm mb-3 flex items-center">
                     <Workflow className="w-4 h-4 mr-2 text-emerald-500" /> 

@@ -70,10 +70,7 @@ const getProjectContext = () => {
 
 export const generateProjectAnswer = async (userQuestion: string): Promise<string> => {
   try {
-    // 标准写法：使用 VITE_ 前缀和 import.meta.env
-const ai = new GoogleGenAI({ 
-  apiKey: import.meta.env.VITE_API_KEY || '' 
-});
+    const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
