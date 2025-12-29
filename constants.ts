@@ -15,7 +15,6 @@ export const TEAM_MEMBERS: TeamMember[] = [
     description: "整理业务痛点，进行课题有关规划设计和业务可行性落地，输出相关业务解决方案。",
     // Please replace this URL with the actual path to the uploaded photo if needed.
     // Using a professional placeholder for now to demonstrate layout.
-    imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200&h=200"
   },
   {
     name: "解鹏",
